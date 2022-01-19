@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/posts")
 @AllArgsConstructor
@@ -18,5 +20,11 @@ public class PostController {
   public ResponseEntity<PostDTO> createPost(@RequestBody PostDTO postDTO){
 
     return new ResponseEntity<>(service.createPost(postDTO), HttpStatus.CREATED);
+  }
+
+  @GetMapping
+  public List<PostDTO> getAllPosts(){
+
+    return service.getAllPosts();
   }
 }

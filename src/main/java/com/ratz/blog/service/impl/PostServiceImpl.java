@@ -7,6 +7,9 @@ import com.ratz.blog.service.PostService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @AllArgsConstructor
 public class PostServiceImpl implements PostService {
@@ -17,22 +20,44 @@ public class PostServiceImpl implements PostService {
   @Override
   public PostDTO createPost(PostDTO postDTO) {
 
-    Post post = Post.builder()
-        .id(postDTO.getId())
-        .content(postDTO.getContent())
-        .description(postDTO.getDescription())
-        .title(postDTO.getTitle())
-        .build();
+    Post post = mapToPostEntity(postDTO);
 
     repository.save(post);
 
-    PostDTO dto = PostDTO.builder()
+    PostDTO dto = mapToPostDTO(post);
+
+    return dto;
+  }
+
+  @Override
+  public List<PostDTO> getAllPosts() {
+
+    List<Post> list = repository.findAll();
+
+    List<PostDTO> dtoList = list.stream().map(this::mapToPostDTO).collect(Collectors.toList());
+
+    return dtoList;
+  }
+
+  private PostDTO mapToPostDTO(Post post) {
+
+    return PostDTO.builder()
         .id(post.getId())
         .content(post.getContent())
         .title(post.getTitle())
         .description(post.getDescription())
         .build();
 
-    return dto;
+
+  }
+
+  private Post mapToPostEntity(PostDTO postDTO) {
+
+    return Post.builder()
+        .id(postDTO.getId())
+        .content(postDTO.getContent())
+        .description(postDTO.getDescription())
+        .title(postDTO.getTitle())
+        .build();
   }
 }
