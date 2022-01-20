@@ -27,4 +27,10 @@ public class PostController {
 
     return service.getAllPosts();
   }
+
+  @GetMapping("/{id}")
+  public ResponseEntity<PostDTO> getPostById(@PathVariable Long id){
+
+    return new ResponseEntity<>(service.getPostById(id), HttpStatus.OK);
+  }
 }

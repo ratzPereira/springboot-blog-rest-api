@@ -2,6 +2,7 @@ package com.ratz.blog.service.impl;
 
 import com.ratz.blog.DTO.PostDTO;
 import com.ratz.blog.entity.Post;
+import com.ratz.blog.exception.ResourceNotFoundException;
 import com.ratz.blog.repository.PostRepository;
 import com.ratz.blog.service.PostService;
 import lombok.AllArgsConstructor;
@@ -34,10 +35,20 @@ public class PostServiceImpl implements PostService {
 
     List<Post> list = repository.findAll();
 
-    List<PostDTO> dtoList = list.stream().map(this::mapToPostDTO).collect(Collectors.toList());
-
-    return dtoList;
+    return list.stream().map(this::mapToPostDTO).collect(Collectors.toList());
   }
+
+  @Override
+  public PostDTO getPostById(Long id) {
+
+    Post post = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post", "id", id.toString()));
+    return mapToPostDTO(post);
+  }
+
+
+
+
+
 
   private PostDTO mapToPostDTO(Post post) {
 
