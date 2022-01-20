@@ -3,6 +3,7 @@ package com.ratz.blog.controller;
 import com.ratz.blog.DTO.PostDTO;
 import com.ratz.blog.DTO.PostResponse;
 import com.ratz.blog.service.PostService;
+import com.ratz.blog.utils.AppConstants;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,12 +26,13 @@ public class PostController {
 
   @GetMapping
   public PostResponse getAllPosts(
-      @RequestParam(value = "pageNumber", defaultValue = "0", required = false) int pageNumber,
-      @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
-      @RequestParam(value = "sortBy", defaultValue = "id", required = false) String sort
+      @RequestParam(value = "pageNumber", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNumber,
+      @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+      @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sort,
+      @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir
   ){
 
-    return service.getAllPosts(pageNumber,pageSize, sort);
+    return service.getAllPosts(pageNumber,pageSize, sort, sortDir);
   }
 
   @GetMapping("/{id}")
