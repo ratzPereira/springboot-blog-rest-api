@@ -1,6 +1,7 @@
 package com.ratz.blog.controller;
 
 import com.ratz.blog.DTO.PostDTO;
+import com.ratz.blog.DTO.PostResponse;
 import com.ratz.blog.service.PostService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,7 @@ public class PostController {
   }
 
   @GetMapping
-  public List<PostDTO> getAllPosts(
+  public PostResponse getAllPosts(
       @RequestParam(value = "pageNumber", defaultValue = "0", required = false) int pageNumber,
       @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize
   ){

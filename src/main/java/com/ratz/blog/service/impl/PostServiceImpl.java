@@ -1,6 +1,7 @@
 package com.ratz.blog.service.impl;
 
 import com.ratz.blog.DTO.PostDTO;
+import com.ratz.blog.DTO.PostResponse;
 import com.ratz.blog.entity.Post;
 import com.ratz.blog.exception.ResourceNotFoundException;
 import com.ratz.blog.repository.PostRepository;
@@ -35,16 +36,19 @@ public class PostServiceImpl implements PostService {
   }
 
   @Override
-  public List<PostDTO> getAllPosts(int pageNumber, int pageSize) {
+  public PostResponse getAllPosts(int pageNumber, int pageSize) {
 
     //create pageable instance
-    Pageable pageable = PageRequest.of(pageNumber,pageSize);
+    Pageable pageable = PageRequest.of(pageNumber, pageSize);
     Page<Post> list = repository.findAll(pageable);
 
     //get content for page object
     List<Post> postList = list.getContent();
 
-    return postList.stream().map(this::mapToPostDTO).collect(Collectors.toList());
+
+    List<PostDTO> postDTOS = postList.stream().map(this::mapToPostDTO).collect(Collectors.toList());
+
+    return createPostResponse(list, pageNumber,pageSize, postDTOS);
   }
 
   @Override
@@ -71,10 +75,10 @@ public class PostServiceImpl implements PostService {
   @Override
   public void deletePostById(Long id) {
 
-    if (repository.findById(id).isPresent()){
+    if (repository.findById(id).isPresent()) {
       repository.deleteById(id);
     } else {
-      throw new ResourceNotFoundException("Delete Post","ID:",id.toString());
+      throw new ResourceNotFoundException("Delete Post", "ID:", id.toString());
     }
 
   }
@@ -98,6 +102,18 @@ public class PostServiceImpl implements PostService {
         .content(postDTO.getContent())
         .description(postDTO.getDescription())
         .title(postDTO.getTitle())
+        .build();
+  }
+
+  private PostResponse createPostResponse(Page postResponse, int pageNumber, int pageSize, List<PostDTO> postDTOS) {
+
+    return PostResponse.builder()
+        .content(postDTOS)
+        .isLast(postResponse.isLast())
+        .pageNumber(pageNumber)
+        .pageSize(pageSize)
+        .totalElements(postResponse.getTotalElements())
+        .totalPages(postResponse.getTotalPages())
         .build();
   }
 }
