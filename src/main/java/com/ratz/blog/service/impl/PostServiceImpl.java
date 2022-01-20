@@ -6,7 +6,11 @@ import com.ratz.blog.exception.ResourceNotFoundException;
 import com.ratz.blog.repository.PostRepository;
 import com.ratz.blog.service.PostService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,11 +35,16 @@ public class PostServiceImpl implements PostService {
   }
 
   @Override
-  public List<PostDTO> getAllPosts() {
+  public List<PostDTO> getAllPosts(int pageNumber, int pageSize) {
 
-    List<Post> list = repository.findAll();
+    //create pageable instance
+    Pageable pageable = PageRequest.of(pageNumber,pageSize);
+    Page<Post> list = repository.findAll(pageable);
 
-    return list.stream().map(this::mapToPostDTO).collect(Collectors.toList());
+    //get content for page object
+    List<Post> postList = list.getContent();
+
+    return postList.stream().map(this::mapToPostDTO).collect(Collectors.toList());
   }
 
   @Override
