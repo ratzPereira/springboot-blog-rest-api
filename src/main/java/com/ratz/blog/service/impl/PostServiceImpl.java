@@ -59,6 +59,16 @@ public class PostServiceImpl implements PostService {
   }
 
 
+  @Override
+  public void deletePostById(Long id) {
+
+    if (repository.findById(id).isPresent()){
+      repository.deleteById(id);
+    } else {
+      throw new ResourceNotFoundException("Delete Post","ID:",id.toString());
+    }
+
+  }
 
   private PostDTO mapToPostDTO(Post post) {
 
