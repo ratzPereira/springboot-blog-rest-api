@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 
@@ -36,10 +37,10 @@ public class PostServiceImpl implements PostService {
   }
 
   @Override
-  public PostResponse getAllPosts(int pageNumber, int pageSize) {
+  public PostResponse getAllPosts(int pageNumber, int pageSize, String sortBy) {
 
     //create pageable instance
-    Pageable pageable = PageRequest.of(pageNumber, pageSize);
+    Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sortBy));
     Page<Post> list = repository.findAll(pageable);
 
     //get content for page object

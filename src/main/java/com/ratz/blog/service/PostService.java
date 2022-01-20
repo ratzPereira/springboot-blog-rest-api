@@ -8,7 +8,7 @@ import com.ratz.blog.DTO.PostResponse;
 public interface PostService {
 
   PostDTO createPost(PostDTO postDTO);
-  PostResponse getAllPosts(int pageNumber, int pageSize);
+  PostResponse getAllPosts(int pageNumber, int pageSize, String sort);
   PostDTO getPostById(Long id);
   PostDTO updatePost(Long id, PostDTO postDTO);
   void deletePostById(Long id);
