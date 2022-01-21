@@ -1,6 +1,5 @@
 package com.ratz.blog.entity;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,23 +14,26 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "posts", uniqueConstraints = {@UniqueConstraint(columnNames = {"title"})})
-public class Post {
+@Table(name = "comments")
+public class Comment {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   @Column(nullable = false)
-  private String title;
+  private String name;
 
   @Column(nullable = false)
-  private String description;
+  private String email;
 
   @Column(nullable = false)
-  private String content;
+  private String body;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "post_id", nullable = false)
+  private Post post;
 
   @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<Comment> comments = new HashSet<>();
-
 }
