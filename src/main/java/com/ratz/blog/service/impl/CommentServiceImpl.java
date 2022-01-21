@@ -10,6 +10,9 @@ import com.ratz.blog.service.CommentService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @AllArgsConstructor
 public class CommentServiceImpl implements CommentService {
@@ -27,18 +30,32 @@ public class CommentServiceImpl implements CommentService {
         .email(commentDTO.getEmail())
         .build();
 
-    Post post = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Get Post", "id: " , id.toString()));
+    Post post = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Get Post", "id: ", id.toString()));
 
     comment.setPost(post);
     commentRepository.save(comment);
 
-    CommentDTO dto = CommentDTO.builder()
+    CommentDTO dto = entityToCommentDTO(comment);
+
+    return dto;
+  }
+
+  @Override
+  public List<CommentDTO> getCommentsByPostId(long id) {
+
+    List<Comment> comments = commentRepository.findByPostId(id);
+
+    return comments.stream().map(this::entityToCommentDTO).collect(Collectors.toList());
+  }
+
+
+  private CommentDTO entityToCommentDTO(Comment comment){
+
+    return CommentDTO.builder()
         .body(comment.getBody())
         .email(comment.getEmail())
         .id(comment.getId())
         .name(comment.getName())
         .build();
-
-    return dto;
   }
 }
