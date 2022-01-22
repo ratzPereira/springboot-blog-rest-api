@@ -1,21 +1,21 @@
 package com.ratz.blog.entity;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity
-@Builder
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "posts", uniqueConstraints = {@UniqueConstraint(columnNames = {"title"})})
+
+@Entity
+@Table(
+    name = "posts", uniqueConstraints = {@UniqueConstraint(columnNames = {"title"})}
+)
 public class Post {
 
   @Id

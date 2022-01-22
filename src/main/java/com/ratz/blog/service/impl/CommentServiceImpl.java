@@ -10,6 +10,7 @@ import com.ratz.blog.repository.PostRepository;
 import com.ratz.blog.service.CommentService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -23,16 +24,12 @@ public class CommentServiceImpl implements CommentService {
 
   private CommentRepository commentRepository;
   private PostRepository postRepository;
+  private ModelMapper modelMapper;
 
   @Override
   public CommentDTO createComment(Long id, CommentDTO commentDTO) {
 
-    Comment comment = Comment.builder()
-        .id(commentDTO.getId())
-        .name(commentDTO.getName())
-        .body(commentDTO.getBody())
-        .email(commentDTO.getEmail())
-        .build();
+    Comment comment = mapToEntity(commentDTO);
 
     Post post = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Get Post", "id: ", id.toString()));
 
@@ -114,11 +111,11 @@ public class CommentServiceImpl implements CommentService {
 
   private CommentDTO entityToCommentDTO(Comment comment) {
 
-    return CommentDTO.builder()
-        .body(comment.getBody())
-        .email(comment.getEmail())
-        .id(comment.getId())
-        .name(comment.getName())
-        .build();
+    return modelMapper.map(comment, CommentDTO.class);
+  }
+
+  private Comment mapToEntity(CommentDTO commentDto){
+
+    return modelMapper.map(commentDto, Comment.class);
   }
 }

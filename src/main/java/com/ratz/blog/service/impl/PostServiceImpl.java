@@ -7,6 +7,7 @@ import com.ratz.blog.exception.ResourceNotFoundException;
 import com.ratz.blog.repository.PostRepository;
 import com.ratz.blog.service.PostService;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +24,7 @@ public class PostServiceImpl implements PostService {
 
 
   private PostRepository repository;
+  private ModelMapper modelMapper;
 
   @Override
   public PostDTO createPost(PostDTO postDTO) {
@@ -88,24 +90,12 @@ public class PostServiceImpl implements PostService {
 
   private PostDTO mapToPostDTO(Post post) {
 
-    return PostDTO.builder()
-        .id(post.getId())
-        .content(post.getContent())
-        .title(post.getTitle())
-        .description(post.getDescription())
-        .build();
-
-
+    return modelMapper.map(post, PostDTO.class);
   }
 
   private Post mapToPostEntity(PostDTO postDTO) {
 
-    return Post.builder()
-        .id(postDTO.getId())
-        .content(postDTO.getContent())
-        .description(postDTO.getDescription())
-        .title(postDTO.getTitle())
-        .build();
+    return modelMapper.map(postDTO, Post.class);
   }
 
   private PostResponse createPostResponse(Page postResponse, int pageNumber, int pageSize, List<PostDTO> postDTOS) {
