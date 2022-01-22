@@ -17,21 +17,31 @@ public class CommentController {
   private CommentService service;
 
   @PostMapping("posts/{id}/comments")
-  public ResponseEntity<CommentDTO> createComment(@PathVariable Long id, @RequestBody CommentDTO commentDTO){
+  public ResponseEntity<CommentDTO> createComment(@PathVariable Long id, @RequestBody CommentDTO commentDTO) {
 
-    return new ResponseEntity(service.createComment(id,commentDTO), HttpStatus.CREATED);
+    return new ResponseEntity(service.createComment(id, commentDTO), HttpStatus.CREATED);
   }
 
   @GetMapping("posts/{id}/comments")
-  public List<CommentDTO> getAllCommentsByPostId(@PathVariable Long id){
+  public List<CommentDTO> getAllCommentsByPostId(@PathVariable Long id) {
 
     return service.getCommentsByPostId(id);
   }
 
   @GetMapping("posts/{postId}/comments/{commentId}")
-  public ResponseEntity<CommentDTO> getCommentById(@PathVariable Long postId, @PathVariable Long commentId){
+  public ResponseEntity<CommentDTO> getCommentById(@PathVariable Long postId, @PathVariable Long commentId) {
 
-    return new ResponseEntity<>(service.getCommentById(postId, commentId),HttpStatus.OK);
+    return new ResponseEntity<>(service.getCommentById(postId, commentId), HttpStatus.OK);
+  }
+
+  @PutMapping("posts/{postId}/comments/{commentId}")
+  public ResponseEntity<CommentDTO> updateComment(
+      @PathVariable Long postId,
+      @PathVariable Long commentId,
+      @RequestBody CommentDTO commentDTO
+  ) {
+
+    return new ResponseEntity<>(service.updateComment(postId, commentId, commentDTO), HttpStatus.OK);
   }
 
 }
