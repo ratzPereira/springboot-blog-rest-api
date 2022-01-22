@@ -3,11 +3,14 @@ package com.ratz.blog.service.impl;
 import com.ratz.blog.DTO.CommentDTO;
 import com.ratz.blog.entity.Comment;
 import com.ratz.blog.entity.Post;
+import com.ratz.blog.exception.BlogAPIException;
 import com.ratz.blog.exception.ResourceNotFoundException;
 import com.ratz.blog.repository.CommentRepository;
 import com.ratz.blog.repository.PostRepository;
 import com.ratz.blog.service.CommentService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +18,7 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class CommentServiceImpl implements CommentService {
 
   private CommentRepository commentRepository;
@@ -49,7 +53,27 @@ public class CommentServiceImpl implements CommentService {
   }
 
 
-  private CommentDTO entityToCommentDTO(Comment comment){
+  @Override
+  public CommentDTO getCommentById(Long postId, Long commentId) {
+
+    Post post = postRepository.findById(postId).orElseThrow(() ->
+        new ResourceNotFoundException("Post", "Id: ", postId.toString()));
+
+    Comment comment = commentRepository.findById(commentId).orElseThrow(() ->
+        new ResourceNotFoundException("Comment", "Id: ", commentId.toString()));
+
+
+    if (!comment.getPost().getId().equals(post.getId())) {
+      log.info("The comment id does not exist on this post");
+      throw new BlogAPIException(HttpStatus.BAD_REQUEST, "Comment does not belong to post");
+    }
+
+
+    return entityToCommentDTO(comment);
+  }
+
+
+  private CommentDTO entityToCommentDTO(Comment comment) {
 
     return CommentDTO.builder()
         .body(comment.getBody())

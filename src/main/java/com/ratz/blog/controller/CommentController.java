@@ -1,7 +1,6 @@
 package com.ratz.blog.controller;
 
 import com.ratz.blog.DTO.CommentDTO;
-import com.ratz.blog.entity.Comment;
 import com.ratz.blog.service.CommentService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,6 +26,12 @@ public class CommentController {
   public List<CommentDTO> getAllCommentsByPostId(@PathVariable Long id){
 
     return service.getCommentsByPostId(id);
+  }
+
+  @GetMapping("posts/{postId}/comments/{commentId}")
+  public ResponseEntity<CommentDTO> getCommentById(@PathVariable Long postId, @PathVariable Long commentId){
+
+    return new ResponseEntity<>(service.getCommentById(postId, commentId),HttpStatus.OK);
   }
 
 }
