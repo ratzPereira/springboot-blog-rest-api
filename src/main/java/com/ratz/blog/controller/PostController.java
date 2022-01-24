@@ -7,6 +7,7 @@ import com.ratz.blog.utils.AppConstants;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -19,6 +20,7 @@ public class PostController {
 
   private final PostService service;
 
+  @PreAuthorize("hasRole('ADMIN')")
   @PostMapping
   public ResponseEntity<PostDTO> createPost(@Valid @RequestBody PostDTO postDTO){
 
@@ -42,12 +44,14 @@ public class PostController {
     return new ResponseEntity<>(service.getPostById(id), HttpStatus.OK);
   }
 
+  @PreAuthorize("hasRole('ADMIN')")
   @PutMapping("/{id}")
   public ResponseEntity<PostDTO> updatePost(@PathVariable Long id, @Valid @RequestBody PostDTO postDTO){
 
     return new ResponseEntity<>(service.updatePost(id, postDTO), HttpStatus.OK);
   }
 
+  @PreAuthorize("hasRole('ADMIN')")
   @DeleteMapping("/{id}")
   public ResponseEntity<String> deletePost(@PathVariable Long id){
 
