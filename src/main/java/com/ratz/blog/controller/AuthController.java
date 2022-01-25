@@ -1,13 +1,16 @@
 package com.ratz.blog.controller;
 
 
+import com.ratz.blog.DTO.JWTAuthResponse;
 import com.ratz.blog.DTO.LoginDTO;
 import com.ratz.blog.DTO.SignUpDTO;
 import com.ratz.blog.entity.Role;
 import com.ratz.blog.entity.User;
 import com.ratz.blog.repository.RoleRepository;
 import com.ratz.blog.repository.UserRepository;
+import com.ratz.blog.security.JwtTokenProvider;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,14 +36,22 @@ public class AuthController {
   private PasswordEncoder passwordEncoder;
 
 
-  @PostMapping("/signIn")
-  public ResponseEntity<String> authenticateUser(@RequestBody LoginDTO loginDTO){
+  @Autowired
+  private JwtTokenProvider tokenProvider;
 
-    Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getUsernameOrEmail(), loginDTO.getPassword()));
+
+  @PostMapping("/signIn")
+  public ResponseEntity<JWTAuthResponse> authenticateUser(@RequestBody LoginDTO loginDTO){
+
+    Authentication authentication = authenticationManager
+        .authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getUsernameOrEmail(), loginDTO.getPassword()));
 
     SecurityContextHolder.getContext().setAuthentication(authentication);
 
-    return new ResponseEntity<>("Authentication successfully", HttpStatus.OK);
+    //get token from provider
+    String token = tokenProvider.generateToken(authentication);
+
+    return ResponseEntity.ok(new JWTAuthResponse(token));
   }
 
 
