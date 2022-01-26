@@ -4,7 +4,6 @@ package com.ratz.blog.config;
 import com.ratz.blog.security.CustomUserDetailsService;
 import com.ratz.blog.security.JwtAuthenticationEntryPoint;
 import com.ratz.blog.security.JwtAuthenticationFilter;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -55,8 +54,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .and()
         .authorizeRequests()
         .antMatchers(HttpMethod.GET, "/api/**").permitAll()
-        .antMatchers("/v3/api-docs/**").permitAll()
+        .antMatchers("/v2/api-docs/**").permitAll()
         .antMatchers("/api/auth/**").permitAll()
+        .antMatchers("/swagger-ui/**").permitAll()
+        .antMatchers("/swagger-resources/**").permitAll()
+        .antMatchers("/swagger-ui.html").permitAll()
+        .antMatchers("/webjars/**").permitAll()
         .anyRequest()
         .authenticated();
 
