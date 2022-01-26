@@ -9,6 +9,8 @@ import com.ratz.blog.entity.User;
 import com.ratz.blog.repository.RoleRepository;
 import com.ratz.blog.repository.UserRepository;
 import com.ratz.blog.security.JwtTokenProvider;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
 
+@Api(value = "Auth controller exposes signIn and signUp Rest Api")
 @RestController
 @RequestMapping("/api/auth")
 @AllArgsConstructor
@@ -40,6 +43,7 @@ public class AuthController {
   private JwtTokenProvider tokenProvider;
 
 
+  @ApiOperation(value = "REST API to register or signUp user")
   @PostMapping("/signIn")
   public ResponseEntity<JWTAuthResponse> authenticateUser(@RequestBody LoginDTO loginDTO){
 
@@ -55,6 +59,7 @@ public class AuthController {
   }
 
 
+  @ApiOperation(value = "REST API to login or signIn user")
   @PostMapping("/signUp")
   public ResponseEntity<String> registerUser(@RequestBody SignUpDTO signUpDTO){
 
